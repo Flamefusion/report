@@ -80,13 +80,17 @@ def main():
     df = pd.DataFrame.from_dict(rejection_details, orient='index')
     
     # Write the report to a text file insted of shoing in the console
-    with open("C:/Users/meshe/OneDrive/Desktop/report/output.txt", "a") as f:
+    with open("C:/Users/meshe/OneDrive/Desktop/report/output.txt", "w") as f:
 
         print("REPORT FOR 3DE TECH: ",today,file=f)
         print(f"OUTPUT: {total_rings}",file=f)
         print(f"OKAY: {accepted_rings}",file=f)
         print(f"REJECTED: {rejected_rings}",file=f)
-        print(f"REWORK: {reworked_rings}",file=f)
+        if reworked_rings > 0:
+            print(f"REWORK: {reworked_rings}",file=f)
+        else:
+            pass
+        print(f"YIELD: {yield_percentage:.2f}%",file=f)
         print(f"YIELD: {yield_percentage:.2f}%",file=f)
 
         print("\nREJECTION DETAILS:",file=f)
