@@ -1,2 +1,2 @@
 # report
-a simple script to make a report from an excel sheet
+a simple scripts to genrate production  tezt report with bar diagram and a simple gui to make life easier
