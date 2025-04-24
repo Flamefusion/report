@@ -20,7 +20,7 @@ def run_gui():
         messagebox.showinfo("Success", f"Report generated:\n{output}")
 
     # Create GUI with ttkbootstrap style
-    root = ttk.Window(themename="darkly")  # Using darkly theme for a modern look
+    root = ttk.Window(themename="cyborg")  # Using darkly theme for a modern look
     root.title("Manufacturing Report Generator")
     root.geometry("500x300")
 
