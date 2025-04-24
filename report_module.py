@@ -69,6 +69,26 @@ def generate_report(file_path, report_for):
     yield_percentage = calculate_yield(accepted_rings, total_rings)
     rejection_details = get_rejection_details(sheet, 4)
     cover_mismatch = get_cover_mismatch(sheet, 'D', 'Cover Mismatch')
+    casting_keywords = ['DUST ON RESIN', 'MICRO BUBBLE', 'SPM REJECTION']
+    polishing_keywords = ['SHELL COATING REMOVED', 'SIDE SCRATCH', 'SIDE SCRATCH(EMERY)',
+                          'IMPROPER RESIN FINISH', 'RESIN DAMAGE', 'DISCONNECTING ISSUE',
+                          'CHARGING CODE ISSUE', 'CE TAPE ISSUE']
+    
+    casting_keywords = [kw.lower() for kw in casting_keywords]
+    polishing_keywords = [kw.lower() for kw in polishing_keywords]
+
+    casting_rejections, polishing_rejections, other_rejections = {}, {}, {}
+
+    for reason, count in rejection_details.items():
+        reason_clean = str(reason).strip()
+        reason_lower = reason_clean.lower()
+
+        if fuzzy_match(reason_lower, casting_keywords):
+            casting_rejections[reason_clean] = count
+        elif fuzzy_match(reason_lower, polishing_keywords):
+            polishing_rejections[reason_clean] = count
+        else:
+            other_rejections[reason_clean] = count    
 
     # Clean unwanted entries
     for key in ['Accepted', 'REWORK', 'Cover Mismatch']:
@@ -87,8 +107,21 @@ def generate_report(file_path, report_for):
         print(f"YIELD: {yield_percentage:.2f}%", file=f)
 
         print("\nREJECTION DETAILS:", file=f)
-        if rejection_details:
-            print(pd.DataFrame.from_dict(rejection_details, orient='index').to_string(header=False), file=f)
+        print("\nCasting Rejections:", file=f)
+        if casting_rejections:
+            print(pd.DataFrame.from_dict(casting_rejections, orient='index').to_string(header=False), file=f)
+        else:
+            print("None", file=f)
+
+        print("\nPolishing Issues:", file=f)
+        if polishing_rejections:
+            print(pd.DataFrame.from_dict(polishing_rejections, orient='index').to_string(header=False), file=f)
+        else:
+            print("None", file=f)
+
+        print("\nOther Rejections:", file=f)
+        if other_rejections:
+            print(pd.DataFrame.from_dict(other_rejections, orient='index').to_string(header=False), file=f)
         else:
             print("None", file=f)
 
